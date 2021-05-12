@@ -1,189 +1,89 @@
-import time
-import random
-from statemachine import StateMachine
+from random import randint
 
-alphabet = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
-def q0_transitions(input):
-    print("start state")
-    print("current state: q0\tinput: {}".format(input))
-    if input == "1":
-        newState = "q1"
-    elif input == "#":
-        newState = "q0"
-    elif input in alphabet:
-        newState = "q7"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
+##=========================================================
 
-def q1_transitions(input):
-    print("current state: q1\tinput: {}".format(input))
-    if input == "4":
-        newState = "q2"
-    elif input == "#":
-        newState = "q0"
-    elif input in alphabet:       
-        newState = "q8"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
+# Create a state base class
+State = type('State',(object,),{})
 
-def q2_transitions(input):
-    print("current state: q2\tinput: {}".format(input))
-    if input == "7":
-        newState = "q3"
-    elif input == "#":
-        newState = "q0"
-    elif input in alphabet: 
-        newState = "q9"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
+# Create the two states for the door (locked and unlocked)
+class doorLocked(State):
+    def Execute(self):
+        print('DOOR IS LOCKED!!\n')
 
-def q3_transitions(input):
-    print("current state: q3\tinput: {}".format(input))
-    if input == "2":
-        newState = "q4"
-    elif input == "#":
-        newState = "q0"
-    elif input in alphabet:  
-        newState = "q10"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
+class doorUnlocked(State):
+    def Execute(self):
+        print('DOOR IS UNLOCKED!!\n')
 
-def q4_transitions(input):
-    print("current state: q4\tinput: {}".format(input))
-    if input == "5":
-        newState = "q5"
-    elif input == "#":
-        newState = "q0"
-    elif input in alphabet:   
-        newState = "q11"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
+##=========================================================
 
-def q5_transitions(input):
-    print("current state: q5\tinput: {}".format(input))
-    if input == "8":
-        print("UNLOCKED")
-        time.sleep(2)
-        newState = "q12"
-    elif input == "#":
-        newState = "q0"
-    elif input in alphabet:  
-        print("INCORRECT COMBINATION.")
-        newState = "q0"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
+# Create the transition between the states
+class Transition(object):
+    def __init__(self, toState):
+        self.toState = toState
 
-# def q6_transitions():
-#     print("current state: q6")
-#     print("UNLOCKED")
-#     time.sleep(2)
-#     newState = "q12"
-#     return newState, '#'
+    def Execute(self):
+        print('Transitioning....\n')
 
-def q7_transitions(input):
-    print("current state: q7\tinput: {}".format(input))
-    if input in alphabet: 
-        newState = "q8"
-    elif input == "#":
-        newState = "q0"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
 
-def q8_transitions(input):
-    print("current state: q8\tinput: {}".format(input))
-    if input in alphabet: 
-        newState = "q9"
-    elif input == "#":
-        newState = "q0"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
+##=========================================================
 
-def q9_transitions(input):
-    print("current state: q9\tinput: {}".format(input))
-    if input in alphabet: 
-        newState = "q10"
-    elif input == "#":
-        newState = "q0"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
-
-def q10_transitions(input):
-    print("current state: q10\tinput: {}".format(input))
-    if input in alphabet: 
-        newState = "q11"
-    elif input == "#":
-        newState = "q0"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
-
-def q11_transitions(input):
-    print("current state: q11\tinput: {}".format(input))
-    if input in alphabet: 
-        print("INCORRECT COMBINATION.")
-        newState = "q0"
-    else:
-        newState = "error_state"
-    time.sleep(2)
-    return newState, input
-
-def q12_transitions(input):
-    print("current state: final state\tinput: {}".format(input))
+# Creating the finite state machine
+class SimpleFSM(object):
+    def __init__(self,char):
+        self.char = char
+        self.states = {}
+        self.transitions ={}
+        self.curState = None
+        self.trans = None
     
+    def SetState(self,stateName):
+        self.curState = self.states[stateName]
+   
+    def Transition(self, transName):
+        self.trans = self.transitions[transName]
 
-if __name__ == "__main__":
-    m = StateMachine()
-    m.add_state("q0", q0_transitions)
-    m.add_state("q1", q1_transitions)
-    m.add_state("q2", q2_transitions)
-    m.add_state("q3", q3_transitions)
-    m.add_state("q4", q4_transitions)
-    m.add_state("q5", q5_transitions)
-    #m.add_state("q6", q6_transitions) #, end_state=1)
-    m.add_state("q7", q7_transitions)
-    m.add_state("q8", q8_transitions)
-    m.add_state("q9", q9_transitions)
-    m.add_state("q10", q10_transitions)
-    m.add_state("q11", q11_transitions)
-    m.add_state("q12", q12_transitions, end_state = 1)
-    m.set_start("q0")
+    def Execute(self):
+        if (self.trans):
+            self.trans.Execute()
+            self.SetState(self.trans.toState)
+            self.trans = None
+        self.curState.Execute()
+##=========================================================
+# Create a character class
+class Char(object):
+    def __init__(self):
+        self.FSM = SimpleFSM(self)
+        self.doorLocked = True
 
-    #Test case 1
-    m.run("01#0010") 
-    m.run("147259") # no
-    m.run("14#7259174258")
-    m.run("47258#")
+##=========================================================
 
-  	#Test case 2
-    m.run("147258")
+# Main Program
+if __name__ == '__main__':
+    door = Char()
 
-    #Random test case
-    randTest = ""
-    for i in range(random.choice([6])):
-        randTest += str(random.choice([0, 10]))
-    m.run(randTest)
+    door.FSM.states['Locked'] = doorLocked()
+    door.FSM.states['Unlocked'] = doorUnlocked()
+    door.FSM.transitions['toLocked'] = Transition('Locked')
+    door.FSM.transitions['toUnlocked'] = Transition('Unlocked')
 
-    #User run 
-    code = ""
-    code += input("Enter keycode followed by ENTER key: ")
-    m.run(code)
+    door.FSM.SetState('Locked')
+    
+    reset = '#'
+    code = str(input('PLEASE ENTER THE SIX DIGIT PASSCODE!\n'))
+    while reset == '#':
+        pass
+ 
+        if code == '147258':
+            door.FSM.Transition('toUnlocked')
+            door.doorLocked = False
+            reset = 0
+        else:
+            door.FSM.Transition('toLocked')
+            door.doorLocked = True
+            reset = '#'
+            print('WRONG PASSCODE!\n')
+            print('PLEASE ENTER THE SIX DIGIT PASSCODE!\n')
+            code = input()
+            
+        door.FSM.Execute()

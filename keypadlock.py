@@ -1,4 +1,4 @@
-class StateMachine:
+class KeypadLock:
 	def __init__(self):
 		self.handlers = {}
 		self.startState = None

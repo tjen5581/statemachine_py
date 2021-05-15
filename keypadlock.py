@@ -4,14 +4,14 @@ class StateMachine:
 		self.startState = None
 		self.endStates = []
 
-	def add_state(self, t_state, handler, end_state=0):
-		t_state = t_state.upper()
-		self.handlers[t_state] = handler
+	def add_state(self, j_state, handler, end_state=0):
+		j_state = j_state.upper()
+		self.handlers[j_state] = handler
 		if end_state == 1:
-			self.endStates.append(t_state)
+			self.endStates.append(j_state)
 
-	def set_start(self, t_state):
-		self.startState = t_state.upper()
+	def set_start(self, j_state):
+		self.startState = j_state.upper()
 
 	def run(self, input): #, Iter):
 		global handler

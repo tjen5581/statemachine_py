@@ -8,7 +8,7 @@ class KeypadLock:
 		j_state = j_state.upper()
 		self.handlers[j_state] = handler
 		if end_state == 1:
-			self.endStates.append(j_state)
+		self.endStates.append(j_state)
 
 	def set_start(self, j_state):
 		self.startState = j_state.upper()
@@ -18,11 +18,11 @@ class KeypadLock:
 		try:
 			#handler = self.handlers[self.start_transitions]
 			
-      handler = self.handlers[self.startState]
+      			 handler = self.handlers[self.startState]
       
-      #print('---------- run {} ----------'.format(input))
+     			 #print('---------- run {} ----------'.format(input))
 			
-      str = "run " + input
+    		         str = "run " + input
 			print(str.center(40, '-'))
 		except:
 			print("call set_start() before run()")

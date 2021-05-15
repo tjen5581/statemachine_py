@@ -1,7 +1,18 @@
-import time
-import random
-from statemachine import StateMachine
+from random import randint
+from keypadlock import KeypadLock
 
+# Create a state base class
+State = type('State',(object,),{})
+
+# Create the two states for the door (locked and unlocked)
+class doorLocked(State):
+    def Execute(self):
+        print('DOOR IS LOCKED!!\n')
+
+class doorUnlocked(State):
+    def Execute(self):
+        print('DOOR IS UNLOCKED!!\n')
+        
 input = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 def j0_transitions(input):
